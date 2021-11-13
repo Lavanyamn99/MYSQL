@@ -18,6 +18,8 @@ CREATE TABLE Book_Details(
   INSERT INTO Book_Details values(2,'Data Structure','Padma Reddy',699.0,'2015','v7');
   INSERT INTO Book_Details values(3,'Basic Electrical','Bakshi',400.0,'2017','v8');
   
+
+
   -- second way to insert
   
   INSERT INTO Book_Details(Book_Id,Book_Name,Author_Name)value(4,'Fairy Tale','Jeffy');
@@ -127,4 +129,15 @@ select Published_Year,count(Book_Name)as no_of_books_in_year from Book_Details g
 
 select Published_Year,count(Book_Name)as no_of_books_in_year from Book_Details where Published_Year>2000 group by Published_Year;
 
+-- group by
 
+select Book_Price,count(Book_Price)as No_of_books from Book_Details group by Book_Price;
+select Book_Name,count(Book_Name)as no_of_copies from Book_Details group by Book_Name;
+select Book_Id,min(Book_Price)as lowest_price from Book_Details group by Book_Id;
+select Published_year,max(Book_Price)as highest_price from Book_Details group by Published_year;
+select Published_year,Author_Name,min(Book_Price)as lowest_price from Book_Details group by Published_year,Author_Name;
+select Book_Id,Published_year,min(Book_Price)as lowest_price,max(Book_Price)as highest_price from Book_Details group by Book_Id,Published_year;
+select Published_year,Author_Name,sum(Book_Price)as Total_Price from Book_Details  group by Published_year,Author_Name having Total_Price>400 ;
+select Book_Id,Published_year,min(Book_Price)as lowest_price,max(Book_Price)as highest_price from Book_Details group by Book_Id,Published_year having Book_Id>3;
+select Book_Volume,Book_Name,count(Book_Name)as no_of_copies from Book_Details group by Book_Volume,Book_Name having no_of_copies>2;
+select Author_name,min(Book_Price)as lowest_price from Book_Details group by Author_name having lowest_price>100;
