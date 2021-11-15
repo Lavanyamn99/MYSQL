@@ -141,3 +141,56 @@ select Published_year,Author_Name,sum(Book_Price)as Total_Price from Book_Detail
 select Book_Id,Published_year,min(Book_Price)as lowest_price,max(Book_Price)as highest_price from Book_Details group by Book_Id,Published_year having Book_Id>3;
 select Book_Volume,Book_Name,count(Book_Name)as no_of_copies from Book_Details group by Book_Volume,Book_Name having no_of_copies>2;
 select Author_name,min(Book_Price)as lowest_price from Book_Details group by Author_name having lowest_price>100;
+
+set autocommit=1;
+select*from library.Book_Details;
+delete from Book_Details where Book_Id=4;
+
+commit;
+delete from Book_Details where Book_Id=12;
+delete from Book_Details where Book_Name='DBMS';
+
+savepoint Book_Name;
+update Book_Details set Book_Name =800 where Book_Id=2;
+update Book_Details set Book_Name =500 where Book_Id=3;
+
+savepoint Book_Id;
+
+rollback;
+
+select max(Book_Price) from  Book_Details;
+select min(Book_Price) from  Book_Details; 
+
+-- get the details  of the book which has highest cost
+
+select*from  Book_Details where Book_Price =(select max(Book_Price) from  Book_Details);
+select*from  Book_Details where Book_Price =(select min(Book_Price) from  Book_Details);
+select*from  Book_Details where Book_Price>(select min(Book_Price) from  Book_Details);
+select*from  Book_Details where Book_Price<(select max(Book_Price) from  Book_Details);
+
+-- get second largest cost of book 
+
+select *from Book_Details where Book_Price=699;
+select max(Book_Price)as second_highest from Book_Details where Book_Price< (select max(Book_Price) from  Book_Details);
+select*from  Book_Details where Book_Price = (select max(Book_Price)as second_highest from Book_Details where Book_Price< (select max(Book_Price) from  Book_Details));
+
+-- get third largest cost of book
+
+select *from Book_Details where Book_Price=569;
+select max(Book_Price)as third_highest from Book_Details where Book_Price<(select max(Book_Price)as second_highest from Book_Details where Book_Price< (select max(Book_Price) from  Book_Details));
+select*from  Book_Details where Book_Price = 
+(select max(Book_Price)as third_highest from Book_Details where Book_Price<(select max(Book_Price)as second_highest from Book_Details where Book_Price< (select max(Book_Price) from  Book_Details)));
+
+-- get price between highest and second highest cost
+
+select *from Book_Details where Book_Price in (699,569);
+select*from  Book_Details where Book_Price in((select max(Book_Price)Book_Details),(select max(Book_Price)as second_highest from Book_Details where Book_Price< (select max(Book_Price) from  Book_Details)));
+
+-- average cost
+
+select avg(Book_Price)from Book_Details;
+select*from  Book_Details where Book_Price in (select avg(Book_Price)from Book_Details);
+
+-- get the book details by the book name which is published in the year 2005
+select*from Book_Details where Book_Name in((select Book_Name from Book_Details group by Published_Year having Published_Year>2005));
+select Book_Name from Book_Details where Publish_Year>2005
