@@ -151,8 +151,8 @@ delete from Book_Details where Book_Id=12;
 delete from Book_Details where Book_Name='DBMS';
 
 savepoint Book_Name;
-update Book_Details set Book_Name =800 where Book_Id=2;
-update Book_Details set Book_Name =500 where Book_Id=3;
+update Book_Details set Book_Price =800 where Book_Id=2;
+update Book_Details set Book_Price=500 where Book_Id=3;
 
 savepoint Book_Id;
 
@@ -161,6 +161,7 @@ rollback;
 select max(Book_Price) from  Book_Details;
 select min(Book_Price) from  Book_Details; 
 
+update Book_Details set Book_Price=500 where Book_Id=3;
 -- get the details  of the book which has highest cost
 
 select*from  Book_Details where Book_Price =(select max(Book_Price) from  Book_Details);
@@ -192,5 +193,32 @@ select avg(Book_Price)from Book_Details;
 select*from  Book_Details where Book_Price in (select avg(Book_Price)from Book_Details);
 
 -- get the book details by the book name which is published in the year 2005
+
 select*from Book_Details where Book_Name in((select Book_Name from Book_Details group by Published_Year having Published_Year>2005));
-select Book_Name from Book_Details where Publish_Year>2005
+select Book_Name from Book_Details where Published_Year>2005;
+
+create table Books(
+ Book_Id TINYINT,
+  Book_Name VARCHAR(30),
+  Author_Name VARCHAR(20),
+  Book_Price FLOAT,
+  Published_Year YEAR,
+  Book_Volume CHAR(10)
+
+);
+
+alter table Books modify Book_Name varchar(35);
+alter table Books modify Book_Volume char(20);
+
+describe Books;
+
+show tables;
+select*from library.Book_Details;
+
+insert into Books select*from Book_Details where Book_Name in (select Book_Name from Book_Details);
+update Book_Details set Book_Price=567 where Book_Name in (select Book_Name from Books);
+delete from Book_Details where Book_Name=(select Book_Name from Books);
+
+create user Temp@'localhost';
+show grants for Temp@'localhost';
+grant select,update,delete on Book_Details to Temp@'localhost';
